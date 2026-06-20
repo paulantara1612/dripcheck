@@ -1,888 +1,322 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DRIPCHECK — Make Your Drip Effortless</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --acid: #CCFF00;
-    --acid-dim: #b8e600;
-    --bg: #0a0a0a;
-    --bg2: #131313;
-    --bg3: #1a1a1a;
-    --surface: #1e1e1e;
-    --border: rgba(255,255,255,0.08);
-    --text: #f0f0f0;
-    --muted: #888;
-    --purple: #9B6FFF;
-    --teal: #2DDCB4;
-    --white: #fff;
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  html { scroll-behavior: smooth; }
-
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'Space Grotesk', sans-serif;
-    overflow-x: hidden;
-  }
-
-  /* ── UTILITY ── */
-  .acid { color: var(--acid); }
-  .muted { color: var(--muted); }
-
-  /* ── NAV ── */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 1.2rem 5%;
-    background: rgba(10,10,10,0.85);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-  }
-
-  .logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2rem;
-    letter-spacing: 0.04em;
-    color: var(--white);
-    text-decoration: none;
-  }
-  .logo span { color: var(--acid); }
-
-  nav ul {
-    display: flex; gap: 2.5rem; list-style: none;
-  }
-  nav ul a {
-    color: var(--muted); text-decoration: none; font-size: 0.85rem;
-    letter-spacing: 0.08em; text-transform: uppercase; font-weight: 500;
-    transition: color 0.2s;
-  }
-  nav ul a:hover { color: var(--acid); }
-
-  .nav-cta {
-    background: var(--acid); color: #000;
-    border: none; padding: 0.6rem 1.4rem;
-    border-radius: 999px; font-weight: 700;
-    font-size: 0.8rem; letter-spacing: 0.06em; text-transform: uppercase;
-    cursor: pointer; transition: transform 0.15s, background 0.15s;
-    font-family: 'Space Grotesk', sans-serif;
-    text-decoration: none;
-  }
-  .nav-cta:hover { background: var(--acid-dim); transform: scale(1.04); }
-
-  /* ── HERO ── */
-  #hero {
-    min-height: 100vh;
-    display: flex; flex-direction: column; justify-content: center;
-    padding: 8rem 5% 4rem;
-    position: relative; overflow: hidden;
-  }
-
-  .hero-badge {
-    display: inline-flex; align-items: center; gap: 0.5rem;
-    background: rgba(204,255,0,0.08); border: 1px solid rgba(204,255,0,0.25);
-    border-radius: 999px; padding: 0.4rem 1rem;
-    font-size: 0.75rem; font-weight: 600; letter-spacing: 0.1em;
-    text-transform: uppercase; color: var(--acid);
-    margin-bottom: 2rem; width: fit-content;
-  }
-  .badge-dot {
-    width: 6px; height: 6px; border-radius: 50%;
-    background: var(--acid); animation: pulse 2s infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.5; transform: scale(1.4); }
-  }
-
-  .hero-headline {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(5rem, 14vw, 12rem);
-    line-height: 0.9;
-    letter-spacing: 0.02em;
-    color: var(--white);
-    margin-bottom: 0.15em;
-  }
-  .hero-headline .italic-acid {
-    color: var(--acid);
-    font-style: italic;
-  }
-
-  .hero-sub {
-    font-size: clamp(1rem, 1.8vw, 1.25rem);
-    color: var(--muted);
-    max-width: 480px;
-    line-height: 1.65;
-    margin-bottom: 3rem;
-    font-weight: 400;
-  }
-
-  .hero-ctas {
-    display: flex; gap: 1rem; flex-wrap: wrap; align-items: center;
-  }
-
-  .btn-primary {
-    background: var(--acid); color: #000;
-    border: none; padding: 1rem 2.2rem;
-    border-radius: 999px; font-weight: 700;
-    font-size: 1rem; letter-spacing: 0.04em;
-    cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
-    font-family: 'Space Grotesk', sans-serif;
-    text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem;
-  }
-  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 12px 40px rgba(204,255,0,0.3); }
-
-  .btn-ghost {
-    background: transparent; color: var(--text);
-    border: 1px solid var(--border); padding: 1rem 2.2rem;
-    border-radius: 999px; font-weight: 500;
-    font-size: 1rem; letter-spacing: 0.04em;
-    cursor: pointer; transition: border-color 0.2s, color 0.2s;
-    font-family: 'Space Grotesk', sans-serif;
-    text-decoration: none;
-  }
-  .btn-ghost:hover { border-color: rgba(255,255,255,0.3); color: var(--white); }
-
-  .hero-stats {
-    display: flex; gap: 3rem; margin-top: 4rem;
-    padding-top: 2rem; border-top: 1px solid var(--border);
-  }
-  .stat-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 2.5rem; color: var(--white); line-height: 1;
-  }
-  .stat-label {
-    font-size: 0.75rem; color: var(--muted); letter-spacing: 0.08em;
-    text-transform: uppercase; margin-top: 0.2rem;
-  }
-
-  /* noise grain */
-  #hero::before {
-    content: '';
-    position: absolute; inset: 0; z-index: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none; opacity: 0.4;
-  }
-
-  /* big bg text */
-  .hero-bg-text {
-    position: absolute; right: -2%; top: 50%; transform: translateY(-50%);
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(12rem, 28vw, 24rem);
-    color: rgba(255,255,255,0.03);
-    line-height: 1; letter-spacing: 0.02em;
-    user-select: none; pointer-events: none; z-index: 0;
-  }
-
-  #hero > * { position: relative; z-index: 1; }
-
-  /* ── MARQUEE ── */
-  .marquee-wrapper {
-    overflow: hidden; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
-    padding: 1rem 0; background: var(--bg2);
-  }
-  .marquee-track {
-    display: flex; gap: 3rem; width: max-content;
-    animation: marquee 20s linear infinite;
-  }
-  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-  .marquee-item {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.1rem; letter-spacing: 0.12em;
-    color: var(--muted); white-space: nowrap;
-    display: flex; align-items: center; gap: 1rem;
-  }
-  .marquee-item .dot { color: var(--acid); font-size: 1.4rem; }
-
-  /* ── FEATURES ── */
-  #features {
-    padding: 8rem 5%;
-  }
-  .section-tag {
-    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em;
-    text-transform: uppercase; color: var(--acid); margin-bottom: 1.2rem;
-  }
-  .section-title {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(2.8rem, 6vw, 5rem);
-    line-height: 0.95; color: var(--white); margin-bottom: 1.5rem;
-  }
-  .section-sub {
-    font-size: 1rem; color: var(--muted); max-width: 520px; line-height: 1.7;
-  }
-
-  .features-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 1.5px;
-    margin-top: 5rem;
-    border: 1.5px solid var(--border);
-    overflow: hidden;
-    border-radius: 1.5rem;
-  }
-
-  .feature-card {
-    background: var(--bg2);
-    padding: 2.5rem;
-    transition: background 0.3s;
-    position: relative;
-  }
-  .feature-card:hover { background: var(--bg3); }
-
-  .feature-icon {
-    width: 52px; height: 52px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 1.4rem; margin-bottom: 1.5rem;
-  }
-  .feature-icon.purple { background: rgba(155,111,255,0.15); }
-  .feature-icon.teal   { background: rgba(45,220,180,0.15); }
-  .feature-icon.acid   { background: rgba(204,255,0,0.12); }
-
-  .feature-title {
-    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em;
-    text-transform: uppercase; margin-bottom: 0.8rem;
-  }
-  .feature-title.purple { color: var(--purple); }
-  .feature-title.teal   { color: var(--teal); }
-  .feature-title.acid   { color: var(--acid); }
-
-  .feature-text {
-    font-size: 1rem; color: var(--text); line-height: 1.65; font-weight: 400;
-  }
-
-  /* ── HOW IT WORKS ── */
-  #how {
-    padding: 8rem 5%;
-    background: var(--bg2);
-  }
-
-  .steps-row {
-    display: flex; gap: 0; margin-top: 5rem;
-    position: relative;
-  }
-  .steps-row::before {
-    content: '';
-    position: absolute; top: 2.5rem; left: 4%; right: 4%; height: 1px;
-    background: linear-gradient(90deg, transparent, var(--border) 20%, var(--border) 80%, transparent);
-  }
-
-  .step {
-    flex: 1; text-align: center; padding: 0 1.5rem; position: relative;
-  }
-
-  .step-num {
-    width: 5rem; height: 5rem;
-    border-radius: 50%;
-    border: 1px solid var(--border);
-    background: var(--bg);
-    display: flex; align-items: center; justify-content: center;
-    margin: 0 auto 2rem;
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.6rem; color: var(--acid);
-    position: relative; z-index: 1;
-  }
-
-  .step-title {
-    font-weight: 700; font-size: 1.05rem;
-    color: var(--white); margin-bottom: 0.7rem;
-  }
-
-  .step-desc {
-    font-size: 0.9rem; color: var(--muted); line-height: 1.65;
-  }
-
-  /* ── BLUEPRINTS ── */
-  #blueprints {
-    padding: 8rem 5%;
-  }
-
-  .blueprints-header {
-    display: flex; align-items: flex-end; justify-content: space-between;
-    flex-wrap: wrap; gap: 2rem; margin-bottom: 4rem;
-  }
-
-  .blueprints-scroll {
-    display: flex; gap: 1.5rem; overflow-x: auto;
-    padding-bottom: 1rem; scrollbar-width: none;
-  }
-  .blueprints-scroll::-webkit-scrollbar { display: none; }
-
-  .blueprint-card {
-    min-width: 280px; background: var(--surface);
-    border: 1px solid var(--border); border-radius: 1.25rem;
-    padding: 1.75rem; flex-shrink: 0;
-    transition: border-color 0.25s, transform 0.25s;
-    cursor: pointer;
-  }
-  .blueprint-card:hover { border-color: rgba(204,255,0,0.35); transform: translateY(-4px); }
-
-  .bp-tag {
-    font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em;
-    text-transform: uppercase; color: var(--muted); margin-bottom: 0.8rem;
-  }
-
-  .bp-name {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.8rem; letter-spacing: 0.03em;
-    color: var(--white); margin-bottom: 1.2rem; line-height: 1;
-  }
-
-  .bp-pills {
-    display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1.5rem;
-  }
-  .bp-pill {
-    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em;
-    text-transform: uppercase; padding: 0.3rem 0.75rem;
-    border-radius: 999px; border: 1px solid;
-  }
-  .bp-pill.acid { color: var(--acid); border-color: rgba(204,255,0,0.3); background: rgba(204,255,0,0.07); }
-  .bp-pill.purple { color: var(--purple); border-color: rgba(155,111,255,0.3); background: rgba(155,111,255,0.07); }
-  .bp-pill.teal { color: var(--teal); border-color: rgba(45,220,180,0.3); background: rgba(45,220,180,0.07); }
-
-  .bp-match {
-    display: flex; align-items: center; gap: 0.5rem;
-    font-size: 0.8rem; color: var(--muted);
-  }
-  .bp-match-num {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.4rem; color: var(--acid); line-height: 1;
-  }
-
-  .bp-reasons {
-    margin-top: 1.25rem; padding-top: 1.25rem;
-    border-top: 1px solid var(--border);
-  }
-  .bp-reason {
-    display: flex; gap: 0.75rem; margin-bottom: 0.9rem; align-items: flex-start;
-  }
-  .bp-reason-icon {
-    width: 28px; height: 28px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 0.8rem; flex-shrink: 0; margin-top: 1px;
-  }
-  .bp-reason-icon.purple { background: rgba(155,111,255,0.15); color: var(--purple); }
-  .bp-reason-icon.teal   { background: rgba(45,220,180,0.12); color: var(--teal); }
-
-  .bp-reason-label {
-    font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em;
-    text-transform: uppercase; margin-bottom: 0.15rem;
-  }
-  .bp-reason-label.purple { color: var(--purple); }
-  .bp-reason-label.teal   { color: var(--teal); }
-
-  .bp-reason-text { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
-
-  /* ── COMMUNITY ── */
-  #community {
-    padding: 8rem 5%;
-    background: var(--bg2);
-  }
-
-  .community-split {
-    display: grid; grid-template-columns: 1fr 1fr; gap: 5rem;
-    align-items: center;
-  }
-
-  .poll-widget {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 1.5rem; padding: 2rem;
-  }
-
-  .poll-title {
-    font-weight: 700; font-size: 1.05rem;
-    color: var(--white); margin-bottom: 1.5rem;
-  }
-
-  .poll-option {
-    margin-bottom: 0.8rem;
-  }
-  .poll-label {
-    display: flex; justify-content: space-between;
-    font-size: 0.85rem; color: var(--text); margin-bottom: 0.4rem;
-    font-weight: 500;
-  }
-  .poll-bar-track {
-    height: 6px; background: rgba(255,255,255,0.07); border-radius: 999px; overflow: hidden;
-  }
-  .poll-bar {
-    height: 100%; border-radius: 999px;
-    transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
-  }
-  .poll-bar.acid { background: var(--acid); }
-  .poll-bar.purple { background: var(--purple); }
-  .poll-bar.teal { background: var(--teal); }
-  .poll-bar.dim { background: rgba(255,255,255,0.2); }
-
-  .poll-footer {
-    margin-top: 1.2rem; font-size: 0.75rem; color: var(--muted);
-    display: flex; align-items: center; gap: 0.4rem;
-  }
-
-  /* ── CTA ── */
-  #cta {
-    padding: 10rem 5%;
-    text-align: center; position: relative; overflow: hidden;
-  }
-
-  #cta::before {
-    content: '';
-    position: absolute; left: 50%; top: 50%;
-    transform: translate(-50%, -50%);
-    width: 600px; height: 600px;
-    background: radial-gradient(circle, rgba(204,255,0,0.06) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
-  .cta-headline {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(3.5rem, 10vw, 9rem);
-    line-height: 0.9; color: var(--white);
-    margin-bottom: 1.5rem; position: relative;
-  }
-  .cta-headline .acid { color: var(--acid); }
-
-  .cta-sub {
-    font-size: 1.05rem; color: var(--muted); margin-bottom: 3rem;
-    max-width: 400px; margin-left: auto; margin-right: auto; line-height: 1.65;
-    position: relative;
-  }
-
-  .download-btns {
-    display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
-    position: relative;
-  }
-
-  .dl-btn {
-    display: flex; align-items: center; gap: 0.85rem;
-    background: var(--surface); border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 1rem; padding: 0.9rem 1.6rem;
-    cursor: pointer; transition: border-color 0.2s, transform 0.2s;
-    text-decoration: none; color: inherit;
-  }
-  .dl-btn:hover { border-color: var(--acid); transform: translateY(-3px); }
-  .dl-btn-icon { font-size: 1.8rem; line-height: 1; }
-  .dl-btn-text-small { font-size: 0.65rem; color: var(--muted); letter-spacing: 0.06em; text-transform: uppercase; display: block; }
-  .dl-btn-text-big { font-size: 1rem; font-weight: 700; color: var(--white); display: block; }
-
-  /* ── FOOTER ── */
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 2.5rem 5%;
-    display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
-    background: var(--bg);
-  }
-  .footer-logo {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 1.4rem; color: var(--white); letter-spacing: 0.04em;
-    text-decoration: none;
-  }
-  .footer-logo span { color: var(--acid); }
-  .footer-copy { font-size: 0.78rem; color: var(--muted); }
-  .footer-links { display: flex; gap: 2rem; }
-  .footer-links a {
-    font-size: 0.78rem; color: var(--muted); text-decoration: none;
-    transition: color 0.2s;
-  }
-  .footer-links a:hover { color: var(--acid); }
-
-  /* ── ANIMATIONS ── */
-  .fade-in {
-    opacity: 0; transform: translateY(30px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
-  }
-  .fade-in.visible { opacity: 1; transform: translateY(0); }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 768px) {
-    nav ul { display: none; }
-    .community-split { grid-template-columns: 1fr; }
-    .steps-row { flex-direction: column; gap: 3rem; }
-    .steps-row::before { display: none; }
-    .hero-stats { gap: 2rem; flex-wrap: wrap; }
-    .blueprints-header { flex-direction: column; align-items: flex-start; }
-  }
-</style>
-</head>
-<body>
-
-<!-- NAV -->
-<nav>
-  <a href="#" class="logo">DRIP<span>CHECK</span></a>
-  <ul>
-    <li><a href="#features">Features</a></li>
-    <li><a href="#how">How It Works</a></li>
-    <li><a href="#blueprints">Blueprints</a></li>
-    <li><a href="#community">Community</a></li>
-  </ul>
-  <a href="#cta" class="nav-cta">Get The App →</a>
-</nav>
-
-<!-- HERO -->
-<section id="hero">
-  <div class="hero-bg-text">DRIP</div>
-
-  <div class="hero-badge">
-    <span class="badge-dot"></span>
-    AI Stylist Active
-  </div>
-
-  <h1 class="hero-headline">
-    Make Your<br>
-    Drip <span class="italic-acid">Effortless.</span>
-  </h1>
-
-  <p class="hero-sub">
-    AI outfits, smart closet, and fit checks in one place. Your personal stylist — trained on your taste, your schedule, your vibe.
-  </p>
-
-  <div class="hero-ctas">
-    <a href="#cta" class="btn-primary">Build My Style DNA →</a>
-    <a href="#blueprints" class="btn-ghost">See Today's Blueprint</a>
-  </div>
-
-  <div class="hero-stats">
-    <div>
-      <div class="stat-num">98<span class="acid">%</span></div>
-      <div class="stat-label">DNA Match Accuracy</div>
-    </div>
-    <div>
-      <div class="stat-num">3<span class="acid">s</span></div>
-      <div class="stat-label">Outfit Generated</div>
-    </div>
-    <div>
-      <div class="stat-num">50<span class="acid">K+</span></div>
-      <div class="stat-label">Style Profiles</div>
-    </div>
-    <div>
-      <div class="stat-num">4<span class="acid">.</span>9</div>
-      <div class="stat-label">App Store Rating</div>
-    </div>
-  </div>
-</section>
-
-<!-- MARQUEE -->
-<div class="marquee-wrapper" aria-hidden="true">
-  <div class="marquee-track" id="marquee">
-    <span class="marquee-item">Corporate Streetwear <span class="dot">✦</span></span>
-    <span class="marquee-item">Y2K Retro <span class="dot">✦</span></span>
-    <span class="marquee-item">Minimal Edge <span class="dot">✦</span></span>
-    <span class="marquee-item">Corporate Goth <span class="dot">✦</span></span>
-    <span class="marquee-item">Luxury Casual <span class="dot">✦</span></span>
-    <span class="marquee-item">Art School <span class="dot">✦</span></span>
-    <span class="marquee-item">Soft Power <span class="dot">✦</span></span>
-    <span class="marquee-item">Dark Academia <span class="dot">✦</span></span>
-    <span class="marquee-item">Corporate Streetwear <span class="dot">✦</span></span>
-    <span class="marquee-item">Y2K Retro <span class="dot">✦</span></span>
-    <span class="marquee-item">Minimal Edge <span class="dot">✦</span></span>
-    <span class="marquee-item">Corporate Goth <span class="dot">✦</span></span>
-    <span class="marquee-item">Luxury Casual <span class="dot">✦</span></span>
-    <span class="marquee-item">Art School <span class="dot">✦</span></span>
-    <span class="marquee-item">Soft Power <span class="dot">✦</span></span>
-    <span class="marquee-item">Dark Academia <span class="dot">✦</span></span>
-  </div>
-</div>
-
-<!-- FEATURES -->
-<section id="features">
-  <div class="fade-in">
-    <div class="section-tag">What We Do</div>
-    <h2 class="section-title">Three Pillars.<br>Zero Outfit Regrets.</h2>
-    <p class="section-sub">DRIPCHECK combines AI intelligence, your real wardrobe, and community energy into one seamless flow.</p>
-  </div>
-
-  <div class="features-grid fade-in">
-    <div class="feature-card">
-      <div class="feature-icon purple">🎨</div>
-      <div class="feature-title purple">Color Theory</div>
-      <p class="feature-text">Your AI stylist reads tonal balance, seasonal palettes, and occasion context to generate looks that are genuinely high-end — not just thrown together.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon teal">💼</div>
-      <div class="feature-title teal">Occasion Intelligence</div>
-      <p class="feature-text">Syncs with your calendar. Sharp enough for the boardroom, relaxed enough for the streets. Every suggestion is optimized for what's actually on your day.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon acid">👗</div>
-      <div class="feature-title acid">Smart Closet</div>
-      <p class="feature-text">Photograph your wardrobe once. DRIPCHECK learns every piece — what pairs, what doesn't, what's underused. Your closet becomes a curated arsenal.</p>
-    </div>
-  </div>
-</section>
-
-<!-- HOW IT WORKS -->
-<section id="how">
-  <div class="fade-in">
-    <div class="section-tag">The Process</div>
-    <h2 class="section-title">Three Steps to<br>Certified Drip.</h2>
-  </div>
-
-  <div class="steps-row fade-in">
-    <div class="step">
-      <div class="step-num">01</div>
-      <div class="step-title">Build Your Style DNA</div>
-      <p class="step-desc">Define your aura — Streetwear, Minimal, Y2K Retro, Corporate Goth. Pick your aesthetic signature. The AI builds a taste profile unique to you.</p>
-    </div>
-    <div class="step">
-      <div class="step-num">02</div>
-      <div class="step-title">AI Curates Your Fit</div>
-      <p class="step-desc">Every morning, DRIPCHECK generates a Today's Blueprint — a full outfit matched to the weather, your calendar, and your DNA. 98% match, every time.</p>
-    </div>
-    <div class="step">
-      <div class="step-num">03</div>
-      <div class="step-title">Try It In AR</div>
-      <p class="step-desc">See the fit on yourself before leaving the house. Swap pieces from your closet in real time. Step out with zero doubt.</p>
-    </div>
-  </div>
-</section>
-
-<!-- BLUEPRINTS -->
-<section id="blueprints">
-  <div class="blueprints-header fade-in">
-    <div>
-      <div class="section-tag">Today's Blueprints</div>
-      <h2 class="section-title">Your Daily<br>Outfit Intelligence.</h2>
-    </div>
-    <p class="section-sub" style="max-width: 320px;">Real blueprint cards, generated fresh each morning. Swipe to see what today could look like.</p>
-  </div>
-
-  <div class="blueprints-scroll fade-in">
-
-    <!-- Card 1 -->
-    <div class="blueprint-card">
-      <div class="bp-tag">TODAY'S BLUEPRINT · 98% MATCH · ☀ SUNNY / 68°F</div>
-      <div class="bp-name">Corporate<br>Streetwear</div>
-      <div class="bp-pills">
-        <span class="bp-pill acid">Camel Overcoat</span>
-        <span class="bp-pill purple">Charcoal Trousers</span>
-        <span class="bp-pill teal">White Sneakers</span>
-      </div>
-      <div class="bp-match">
-        <span class="bp-match-num">98</span>
-        <div>
-          <div style="font-size:0.65rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--acid);">DNA Match</div>
-          <div style="font-size:0.75rem;color:var(--muted);">10:00 AM Creative Sync</div>
-        </div>
-      </div>
-      <div class="bp-reasons">
-        <div class="bp-reason">
-          <div class="bp-reason-icon purple">🎨</div>
-          <div>
-            <div class="bp-reason-label purple">Color Theory</div>
-            <div class="bp-reason-text">Camel provides a warm neutral base that perfectly complements the deep charcoal, creating a high-end tonal balance.</div>
-          </div>
-        </div>
-        <div class="bp-reason">
-          <div class="bp-reason-icon teal">💼</div>
-          <div>
-            <div class="bp-reason-label teal">Occasion Fit</div>
-            <div class="bp-reason-text">Sharp enough for the boardroom, relaxed enough for the streets. Optimized for your evening networking session.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Card 2 -->
-    <div class="blueprint-card">
-      <div class="bp-tag">TODAY'S BLUEPRINT · 94% MATCH · 🌥 OVERCAST / 62°F</div>
-      <div class="bp-name">Corporate<br>Goth</div>
-      <div class="bp-pills">
-        <span class="bp-pill purple">Black Blazer</span>
-        <span class="bp-pill acid">Wide Leg Pants</span>
-        <span class="bp-pill teal">Chelsea Boots</span>
-      </div>
-      <div class="bp-match">
-        <span class="bp-match-num">94</span>
-        <div>
-          <div style="font-size:0.65rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--acid);">DNA Match</div>
-          <div style="font-size:0.75rem;color:var(--muted);">Client Meeting · 2 PM</div>
-        </div>
-      </div>
-      <div class="bp-reasons">
-        <div class="bp-reason">
-          <div class="bp-reason-icon purple">🎨</div>
-          <div>
-            <div class="bp-reason-label purple">Tonal Harmony</div>
-            <div class="bp-reason-text">All-black monochrome with structured silhouettes creates commanding presence without over-dressing.</div>
-          </div>
-        </div>
-        <div class="bp-reason">
-          <div class="bp-reason-icon teal">💼</div>
-          <div>
-            <div class="bp-reason-label teal">Occasion Fit</div>
-            <div class="bp-reason-text">Overcast sky calls for deeper tones. Client meeting energy: authoritative, deliberate, polished.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Card 3 -->
-    <div class="blueprint-card">
-      <div class="bp-tag">TODAY'S BLUEPRINT · 91% MATCH · 🌤 PARTLY CLOUDY / 72°F</div>
-      <div class="bp-name">Y2K<br>Retro</div>
-      <div class="bp-pills">
-        <span class="bp-pill acid">Cargo Pants</span>
-        <span class="bp-pill purple">Cropped Hoodie</span>
-        <span class="bp-pill teal">Platform Shoes</span>
-      </div>
-      <div class="bp-match">
-        <span class="bp-match-num">91</span>
-        <div>
-          <div style="font-size:0.65rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--acid);">DNA Match</div>
-          <div style="font-size:0.75rem;color:var(--muted);">Casual Day · Creative Studio</div>
-        </div>
-      </div>
-      <div class="bp-reasons">
-        <div class="bp-reason">
-          <div class="bp-reason-icon purple">🎨</div>
-          <div>
-            <div class="bp-reason-label purple">Era Coding</div>
-            <div class="bp-reason-text">Y2K silhouettes updated for 2025: the proportions are retro, the fabrics are technical. Nostalgic but not costume-y.</div>
-          </div>
-        </div>
-        <div class="bp-reason">
-          <div class="bp-reason-icon teal">💼</div>
-          <div>
-            <div class="bp-reason-label teal">Occasion Fit</div>
-            <div class="bp-reason-text">Studio day energy. Creative, expressive, loose — lets the work speak, not the formality.</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- COMMUNITY -->
-<section id="community">
-  <div class="community-split">
-    <div class="fade-in">
-      <div class="section-tag">Community Polls</div>
-      <h2 class="section-title">Your Fit Goes<br>to a Vote.</h2>
-      <p class="section-sub" style="margin-bottom: 2rem;">Share your look. Let the community weigh in. Real-time polls keep you connected to what's actually hitting — and what's not.</p>
-      <a href="#cta" class="btn-primary">Join the Community →</a>
-    </div>
-
-    <div class="fade-in">
-      <div class="poll-widget">
-        <div class="poll-title">🔥 Which fit would you actually wear to a creative agency interview?</div>
-
-        <div class="poll-option">
-          <div class="poll-label">
-            <span>Corporate Streetwear</span>
-            <span class="acid">62%</span>
-          </div>
-          <div class="poll-bar-track">
-            <div class="poll-bar acid" style="width: 0%" data-width="62%"></div>
-          </div>
-        </div>
-
-        <div class="poll-option">
-          <div class="poll-label">
-            <span>Minimal Edge</span>
-            <span style="color:var(--purple)">21%</span>
-          </div>
-          <div class="poll-bar-track">
-            <div class="poll-bar purple" style="width: 0%" data-width="21%"></div>
-          </div>
-        </div>
-
-        <div class="poll-option">
-          <div class="poll-label">
-            <span>Y2K Retro</span>
-            <span style="color:var(--teal)">11%</span>
-          </div>
-          <div class="poll-bar-track">
-            <div class="poll-bar teal" style="width: 0%" data-width="11%"></div>
-          </div>
-        </div>
-
-        <div class="poll-option">
-          <div class="poll-label">
-            <span>Corporate Goth</span>
-            <span style="color:var(--muted)">6%</span>
-          </div>
-          <div class="poll-bar-track">
-            <div class="poll-bar dim" style="width: 0%" data-width="6%"></div>
-          </div>
-        </div>
-
-        <div class="poll-footer">
-          <span>🗳</span> 4,281 votes · 14 hours left
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CTA -->
-<section id="cta">
-  <div class="fade-in">
-    <h2 class="cta-headline">Your Drip.<br><span class="acid">Certified.</span></h2>
-    <p class="cta-sub">Download DRIPCHECK and let the AI build your Style DNA. First outfit, on us.</p>
-    <div class="download-btns">
-      <a href="#" class="dl-btn">
-        <div class="dl-btn-icon">🍎</div>
-        <div>
-          <span class="dl-btn-text-small">Download on the</span>
-          <span class="dl-btn-text-big">App Store</span>
-        </div>
-      </a>
-      <a href="#" class="dl-btn">
-        <div class="dl-btn-icon">▶</div>
-        <div>
-          <span class="dl-btn-text-small">Get it on</span>
-          <span class="dl-btn-text-big">Google Play</span>
-        </div>
-      </a>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <a href="#" class="footer-logo">DRIP<span>CHECK</span></a>
-  <div class="footer-copy">© 2026 DRIPCHECK. Identity is curated by AI.</div>
-  <div class="footer-links">
-    <a href="#">Privacy</a>
-    <a href="#">Terms</a>
-    <a href="#">Contact</a>
-    <a href="#">Instagram</a>
-  </div>
-</footer>
-
-<script>
-  // Scroll fade-in
-  const obs = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('visible'); }
-    });
-  }, { threshold: 0.1 });
-
-  document.querySelectorAll('.fade-in').forEach(el => obs.observe(el));
-
-  // Poll bar animation
-  const pollObs = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.querySelectorAll('.poll-bar').forEach(bar => {
-          bar.style.width = bar.dataset.width;
-        });
-        pollObs.unobserve(e.target);
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#09090d" />
+  <title>DripCheck — Something New Is Coming</title>
+  <meta name="description" content="Your wardrobe has more possibilities than you think. Discover your Outfit Energy with DripCheck." />
+
+  <meta property="og:title" content="DripCheck — Discover Your Outfit Energy" />
+  <meta property="og:description" content="Your wardrobe has more possibilities than you think. Take the 3-minute Outfit Energy check." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://www.dripcheck.biz/" />
+
+  <style>
+    :root {
+      --bg: #09090d;
+      --panel: rgba(255, 255, 255, 0.06);
+      --text: #f7f7fb;
+      --muted: #aaa9b5;
+      --lime: #c9ff3d;
+      --pink: #ff4ed8;
+      --cyan: #4be7ff;
+      --line: rgba(255, 255, 255, 0.12);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 15% 15%, rgba(137, 92, 255, 0.24), transparent 31%),
+        radial-gradient(circle at 86% 20%, rgba(255, 78, 216, 0.18), transparent 28%),
+        radial-gradient(circle at 50% 90%, rgba(75, 231, 255, 0.14), transparent 33%),
+        var(--bg);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: -30%;
+      z-index: -2;
+      pointer-events: none;
+      background: conic-gradient(
+        from 180deg,
+        transparent,
+        rgba(201, 255, 61, 0.04),
+        transparent,
+        rgba(255, 78, 216, 0.05),
+        transparent
+      );
+      animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+      to { transform: rotate(360deg); }
+    }
+
+    .noise {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0.18;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.12'/%3E%3C/svg%3E");
+    }
+
+    .page {
+      width: min(1120px, calc(100% - 32px));
+      min-height: 100vh;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 20px;
+      padding: 24px 0;
+    }
+
+    .logo {
+      font-size: 1.4rem;
+      font-weight: 950;
+      letter-spacing: -0.06em;
+    }
+
+    .logo span { color: var(--lime); }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      padding: 9px 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.04);
+      font-size: 0.78rem;
+      font-weight: 750;
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--lime);
+      box-shadow: 0 0 18px rgba(201, 255, 61, 0.9);
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      50% { transform: scale(1.4); opacity: 0.7; }
+    }
+
+    main {
+      flex: 1;
+      display: grid;
+      place-items: center;
+      padding: 52px 0 70px;
+      text-align: center;
+    }
+
+    .hero {
+      width: 100%;
+      max-width: 960px;
+    }
+
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 25px;
+      padding: 9px 13px;
+      border: 1px solid rgba(201, 255, 61, 0.35);
+      border-radius: 999px;
+      color: var(--lime);
+      background: rgba(201, 255, 61, 0.07);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.76rem;
+      font-weight: 900;
+    }
+
+    h1 {
+      max-width: 920px;
+      margin: 0 auto;
+      font-size: clamp(3.5rem, 10vw, 8.7rem);
+      line-height: 0.87;
+      letter-spacing: -0.085em;
+    }
+
+    .gradient {
+      color: transparent;
+      background: linear-gradient(90deg, var(--lime), var(--cyan), var(--pink), var(--lime));
+      background-size: 240% auto;
+      -webkit-background-clip: text;
+      background-clip: text;
+      animation: flow 6s linear infinite;
+    }
+
+    @keyframes flow {
+      to { background-position: 240% center; }
+    }
+
+    .sub {
+      max-width: 680px;
+      margin: 28px auto 0;
+      color: var(--muted);
+      font-size: clamp(1.02rem, 2.2vw, 1.28rem);
+      line-height: 1.7;
+    }
+
+    .actions {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 34px;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      min-width: 230px;
+      padding: 16px 22px;
+      border-radius: 17px;
+      color: #101208;
+      background: var(--lime);
+      box-shadow: 0 15px 42px rgba(201, 255, 61, 0.22);
+      text-decoration: none;
+      font-weight: 900;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .button:hover {
+      transform: translateY(-2px) scale(1.01);
+      box-shadow: 0 20px 54px rgba(201, 255, 61, 0.29);
+    }
+
+    .small {
+      margin-top: 15px;
+      color: #858493;
+      font-size: 0.82rem;
+    }
+
+    .signals {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 9px;
+      margin-top: 42px;
+    }
+
+    .signal {
+      padding: 9px 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: #d5d4dd;
+      background: var(--panel);
+      font-size: 0.78rem;
+    }
+
+    footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 22px 0 28px;
+      border-top: 1px solid var(--line);
+      color: #777684;
+      font-size: 0.76rem;
+    }
+
+    footer a {
+      color: #a9a8b3;
+      text-decoration: none;
+    }
+
+    @media (max-width: 640px) {
+      .page { width: min(100% - 22px, 1120px); }
+      .status { display: none; }
+      main { padding-top: 36px; }
+      h1 { font-size: clamp(3.3rem, 18vw, 5.7rem); }
+      footer { flex-direction: column; text-align: center; }
+      .button { width: 100%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
       }
-    });
-  }, { threshold: 0.5 });
+    }
+  </style>
+</head>
 
-  const pollWidget = document.querySelector('.poll-widget');
-  if (pollWidget) pollObs.observe(pollWidget);
-</script>
+<body>
+  <div class="noise"></div>
+
+  <div class="page">
+    <header>
+      <div class="logo">drip<span>check</span></div>
+      <div class="status">
+        <span class="dot"></span>
+        SOMETHING IS BUILDING
+      </div>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="eyebrow">The first drop is coming</div>
+
+        <h1>
+          Your wardrobe has
+          <span class="gradient">secrets.</span>
+        </h1>
+
+        <p class="sub">
+          You probably own more outfits than you think.
+          We are building something for the days when you have clothes—
+          but somehow still have nothing to wear.
+        </p>
+
+        <div class="actions">
+          <!-- Change only the link below if your Netlify URL is different. -->
+          <a
+            class="button"
+            href="https://ornate-beignet-401d72.netlify.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Discover Your Outfit Energy →
+          </a>
+        </div>
+
+        <p class="small">A playful 3-minute style check · 18+</p>
+
+        <div class="signals" aria-label="Common outfit habits">
+          <span class="signal">“Nothing to wear”</span>
+          <span class="signal">Outfit repeater</span>
+          <span class="signal">Last-minute dresser</span>
+          <span class="signal">Trip overpacker</span>
+          <span class="signal">Style overthinker</span>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      <span>© 2026 DripCheck</span>
+      <span>Built quietly. Dropping soon.</span>
+    </footer>
+  </div>
 </body>
 </html>
